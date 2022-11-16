@@ -1,16 +1,8 @@
-# chat_end_to_end
+# SIMPLE CHAT END TO END WITH FIREBASE
 
-A new Flutter project.
+- Password hashed twice LMAO.
+- Text encrypt with super encrypt(ROT13 and AES)
 
-## Getting Started
+Next :
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Upload and encrypt image
