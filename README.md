@@ -6,4 +6,4 @@
 
 Next :
 
-- Optimation the App
+- Optimatization the App
