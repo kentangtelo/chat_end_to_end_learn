@@ -1,6 +1,7 @@
 import 'package:chat_end_to_end/encryption.dart';
 import 'package:chat_end_to_end/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'chat_screen.dart';
 
@@ -134,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         MaterialButton(
                           onPressed: () {
@@ -158,21 +159,36 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        MaterialButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
-                              ),
-                            );
-                          },
-                          color: Colors.white,
-                          child: const Text(
-                            "Registering Account",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
+                        Center(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: 'Didnt have any account ?',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'Sign Up',
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterScreen(),
+                                        ),
+                                      );
+                                    },
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
@@ -192,8 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var passwordHash = Encryption.passwordHashSHA(password);
     if (_formKey.currentState!.validate()) {
       try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: passwordHash,
         );

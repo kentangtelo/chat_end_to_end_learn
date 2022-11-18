@@ -20,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final fireStore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final TextEditingController message = TextEditingController();
-  var base64String;
+  var encryptBase64String;
 
   Future getImage() async {
     ImagePicker picker = ImagePicker();
@@ -29,7 +29,8 @@ class _ChatScreenState extends State<ChatScreen> {
       if (value != null) {
         XFile imageFile = XFile(value.path);
         Uint8List imagebytes = await imageFile.readAsBytes();
-        base64String = base64.encode(imagebytes);
+        var base64String = base64.encode(imagebytes);
+        encryptBase64String = Encryption.encryptGambar(base64String);
         uploadImage();
       }
     });
@@ -38,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future uploadImage() async {
     fireStore.collection('Messages').doc().set({
       'message': "",
-      'image': base64String,
+      'image': encryptBase64String,
       'time': DateTime.now(),
       'email': widget.email,
     });
@@ -69,89 +70,82 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.79,
-              child: messages(
-                email: widget.email,
-              ),
+            ListView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height - 150,
+                  child: MessageStream(
+                    email: widget.email,
+                  ),
+                ),
+              ],
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 70,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              left: 5,
-                              right: 5,
-                            ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxHeight: 300,
-                              ),
-                              child: SafeArea(
-                                child: TextFormField(
-                                  maxLines: null,
-                                  controller: message,
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    hintText: 'message',
-                                    enabled: true,
-                                    contentPadding:
-                                        EdgeInsets.only(left: 14.0, top: 8.0),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                    ),
-                                  ),
-                                  onSaved: (value) {
-                                    message.text = value!;
-                                  },
-                                ),
-                              ),
-                            ),
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => getImage(),
+                      icon: const Icon(
+                        Icons.image,
+                      )),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Card(
+                      margin: const EdgeInsets.only(
+                        left: 2,
+                        right: 2,
+                        bottom: 8,
+                      ),
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: message,
+                        decoration: const InputDecoration(
+                          filled: true,
+                          hintText: 'message',
+                          enabled: true,
+                          contentPadding: EdgeInsets.only(
+                              top: 2.0, left: 13.0, right: 13.0, bottom: 10.0),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () => getImage(),
-                          icon: const Icon(Icons.image),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            if (message.text.isNotEmpty) {
-                              String plainText, encryptionText;
-                              plainText = message.text.trim();
-                              encryptionText = Encryption.encrypt(plainText);
-                              fireStore.collection('Messages').doc().set({
-                                'message': encryptionText,
-                                'image': "",
-                                'time': DateTime.now(),
-                                'email': widget.email,
-                              });
-
-                              message.clear();
-                            }
-                          },
-                          icon: const Icon(Icons.send_sharp),
-                        ),
-                      ],
+                        onSaved: (value) {
+                          message.text = value!;
+                        },
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (message.text.isNotEmpty) {
+                        String plainText, encryptionText;
+                        plainText = message.text.trim();
+                        encryptionText = Encryption.encrypt(plainText);
+                        fireStore.collection('Messages').doc().set({
+                          'message': encryptionText,
+                          'image': "",
+                          'time': DateTime.now(),
+                          'email': widget.email,
+                        });
+
+                        message.clear();
+                      }
+                    },
+                    icon: const Icon(Icons.send_sharp),
+                  ),
+                ],
               ),
             ),
           ],

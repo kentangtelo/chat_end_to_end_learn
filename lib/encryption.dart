@@ -29,4 +29,16 @@ class Encryption {
     final decryptROT13 = rot13(decryptedAES);
     return decryptROT13.toString();
   }
+
+  static String encryptGambar(String plainImage) {
+    final encrypterAES = Encrypter(AES(key));
+    final encryptedAES = encrypterAES.encrypt(plainImage, iv: iv);
+    return encryptedAES.base64;
+  }
+
+  static String decryptGambar(String cipherImage) {
+    final encrypterAES = Encrypter(AES(key));
+    final decryptedAES = encrypterAES.decrypt64(cipherImage, iv: iv);
+    return decryptedAES;
+  }
 }

@@ -4,22 +4,22 @@ import 'package:chat_end_to_end/encryption.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class messages extends StatefulWidget {
+class MessageStream extends StatefulWidget {
   String email;
-  messages({required this.email});
+  MessageStream({super.key, required this.email});
+
   @override
-  _messagesState createState() => _messagesState(email: email);
+  State<MessageStream> createState() => _MessageStreamState();
 }
 
-class _messagesState extends State<messages> {
-  String email;
+class _MessageStreamState extends State<MessageStream> {
   Uint8List? decoded64String;
-  _messagesState({required this.email});
 
   final Stream<QuerySnapshot> _messageStream = FirebaseFirestore.instance
       .collection('Messages')
       .orderBy('time')
       .snapshots();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -33,7 +33,6 @@ class _messagesState extends State<messages> {
             child: CircularProgressIndicator(),
           );
         }
-
         return ListView.builder(
           itemCount: snapshot.data!.docs.length,
           physics: const ScrollPhysics(),
@@ -43,14 +42,15 @@ class _messagesState extends State<messages> {
             QueryDocumentSnapshot qs = snapshot.data!.docs[index];
             var imageEncrypted = qs['image'];
             var cipherText = qs['message'];
+            var decryptionImage = "";
             String decryptionText = "";
             if (cipherText != "") {
               decryptionText = Encryption.decrypt(cipherText);
             }
             if (imageEncrypted != "") {
-              decoded64String = base64.decode(imageEncrypted);
+              decryptionImage = Encryption.decryptGambar(imageEncrypted);
+              decoded64String = base64.decode(decryptionImage);
             }
-
             Timestamp t = qs['time'];
             DateTime d = t.toDate();
             return Padding(
@@ -61,7 +61,7 @@ class _messagesState extends State<messages> {
                 right: 8,
               ),
               child: Column(
-                crossAxisAlignment: email == qs['email']
+                crossAxisAlignment: widget.email == qs['email']
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
@@ -105,8 +105,6 @@ class _messagesState extends State<messages> {
                           : Container(
                               height: MediaQuery.of(context).size.height / 2.5,
                               width: MediaQuery.of(context).size.width,
-                              // height: 100,
-                              // width: 100,
                               padding: const EdgeInsets.symmetric(
                                 vertical: 5,
                                 horizontal: 5,
@@ -115,8 +113,6 @@ class _messagesState extends State<messages> {
                                 height:
                                     MediaQuery.of(context).size.height / 2.5,
                                 width: MediaQuery.of(context).size.height / 2,
-                                // height: 100,
-                                // width: 100,
                                 decoration: BoxDecoration(
                                   border: Border.all(),
                                 ),

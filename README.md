@@ -2,7 +2,8 @@
 
 - Password hashed twice LMAO.
 - Text encrypt with super encrypt(ROT13 and AES)
+- Upload and encrypt image
 
 Next :
 
-- Upload and encrypt image
+- Optimation the App
