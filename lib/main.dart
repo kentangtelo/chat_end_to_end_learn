@@ -7,7 +7,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // await Firebase.initializeApp(
-  //     options: FirebaseOptions(
+  //     options: const FirebaseOptions(
   //   apiKey: "AIzaSyCTZp2HEQqz-O_tTaPyw78r1OEc8TbRZ3Q",
   //   appId: "1:20335003276:web:7d88a0b5d3b57b045bdda9",
   //   messagingSenderId: "20335003276",
@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'chat',
+      title: 'Chat End to End',
       theme: ThemeData(
         primaryColor: Colors.orange[900],
       ),

@@ -2,7 +2,6 @@ import 'package:chat_end_to_end/encryption.dart';
 import 'package:chat_end_to_end/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,9 +15,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure3 = true;
   bool visible = false;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
-  final _auth = FirebaseAuth.instance;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: MediaQuery.of(context).size.height,
               child: Center(
                 child: Container(
-                  margin: EdgeInsets.all(12),
+                  margin: const EdgeInsets.all(12),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -149,6 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           },
                           color: Colors.white,
+                          minWidth: MediaQuery.of(context).size.width,
                           child: const Text(
                             "Login",
                             style: TextStyle(

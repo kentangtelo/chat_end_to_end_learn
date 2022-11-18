@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          margin: EdgeInsets.all(12),
+          margin: const EdgeInsets.all(12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
