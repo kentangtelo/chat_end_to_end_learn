@@ -13,7 +13,10 @@ How run the app
 ```
 git clone https://github.com/kentangtelo/chat_end_to_end_learn.git
 ```
-2. Write down in command :
+
+2. Open the folder in Text Editor or IDE
+
+3. Write down in command :
 ```
 flutter pub get
 flutter run
