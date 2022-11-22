@@ -26,9 +26,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (error == null) {
       await auth
           .createUserWithEmailAndPassword(
-        email: email,
-        password: passwordHash,
-      )
+            email: email,
+            password: passwordHash,
+          )
+          .then((value) =>
+              FirebaseFirestore.instance.collection('UserData').doc().set({
+                "email": email,
+                "pasword": passwordHash,
+              }))
           .whenComplete(() {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LoginScreen()));
@@ -51,6 +56,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Text(
+                "Register",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 40,
+                ),
+              ),
               const SizedBox(
                 height: 10,
               ),
